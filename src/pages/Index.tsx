@@ -177,7 +177,11 @@ export default function Index() {
       if (obstacleTimer >= obstacleInterval) {
         obstacleTimer = 0;
         const gapW = level.wallGap;
-        const gapX = Math.random() * (W - gapW - 80) + 40;
+        // Гэп всегда у той стены, где сейчас игрок
+        const playerIsRight = gs.direction === "right";
+        const gapX = playerIsRight
+          ? WALL_L + 2
+          : WALL_R - gapW - 2;
         gs.obstacles.push({ y: -20, gapX, gapW, speed: level.speed, passed: false });
       }
 
@@ -211,9 +215,10 @@ export default function Index() {
           }));
         }
 
-        if (!died && Math.abs(gs.playerY - o.y) < 20) {
+        if (!died && Math.abs(gs.playerY - o.y) < 10) {
           const px = gs.playerX;
-          if (px < o.gapX || px > o.gapX + o.gapW) {
+          const half = PLAYER_SIZE / 2;
+          if (px - half < o.gapX || px + half > o.gapX + o.gapW) {
             died = true;
           }
         }
