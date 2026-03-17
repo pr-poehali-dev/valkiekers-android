@@ -172,8 +172,12 @@ export default function Index() {
       if (!gs.running) return;
 
       gs.frameCount++;
-      obstacleTimer++;
 
+      // Считаем таймер только когда нет активного препятствия на экране
+      const hasActiveObstacle = gs.obstacles.some(o => o.y < gs.playerY + 100);
+      if (!hasActiveObstacle) {
+        obstacleTimer++;
+      }
       if (obstacleTimer >= obstacleInterval) {
         obstacleTimer = 0;
         const gapW = level.wallGap;
