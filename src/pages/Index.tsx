@@ -48,7 +48,7 @@ export default function Index() {
     combo: 0,
     multiplier: 1,
     lastJumpTime: 0,
-    obstacles: [] as { y: number; gapX: number; gapW: number; speed: number; passed: boolean }[],
+    obstacles: [] as { y: number; gapX: number; gapW: number; speed: number; passed: boolean; fromLeft: boolean }[],
     particles: [] as ParticleType[],
     stars: [] as Star[],
     frameCount: 0,
@@ -180,13 +180,10 @@ export default function Index() {
       }
       if (obstacleTimer >= obstacleInterval) {
         obstacleTimer = 0;
-        const gapW = level.wallGap;
-        // Гэп всегда у той стены, где сейчас игрок
-        const playerIsRight = gs.direction === "right";
-        const gapX = playerIsRight
-          ? WALL_L + 2
-          : WALL_R - gapW - 2;
-        gs.obstacles.push({ y: -20, gapX, gapW, speed: level.speed, passed: false });
+        // Преграда с той стороны где НЕТ игрока — нужно прыгнуть к другой стене
+        const spikeFromLeft = gs.direction === "right";
+        const spikeW = Math.floor(W * 0.45 + Math.random() * (W * 0.15));
+        gs.obstacles.push({ y: -20, gapX: spikeFromLeft ? WALL_L : WALL_R - spikeW, gapW: spikeW, speed: level.speed, passed: false, fromLeft: spikeFromLeft });
       }
 
       gs.stars.forEach(s => {
@@ -222,8 +219,12 @@ export default function Index() {
         if (!died && Math.abs(gs.playerY - o.y) < 10) {
           const px = gs.playerX;
           const half = PLAYER_SIZE / 2;
-          if (px - half < o.gapX || px + half > o.gapX + o.gapW) {
-            died = true;
+          if (o.fromLeft) {
+            // Преграда слева — умираем если игрок зашёл в неё (у левой стены)
+            if (px - half < WALL_L + o.gapW) died = true;
+          } else {
+            // Преграда справа — умираем если игрок зашёл в неё (у правой стены)
+            if (px + half > WALL_R - o.gapW) died = true;
           }
         }
       });
@@ -288,18 +289,26 @@ export default function Index() {
         ctx.fillRect(WALL_R + 2, y, W - WALL_R - 4, 2);
       }
 
-      // Obstacles
+      // Obstacles — только с одной стороны
       gs.obstacles.forEach(o => {
         const obstY = Math.floor(o.y);
         ctx.shadowColor = level.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.fillStyle = level.color;
-        ctx.fillRect(WALL_L, obstY - 8, o.gapX - WALL_L, 16);
-        ctx.fillRect(o.gapX + o.gapW, obstY - 8, WALL_R - (o.gapX + o.gapW), 16);
+        if (o.fromLeft) {
+          // Преграда торчит слева
+          ctx.fillRect(WALL_L, obstY - 8, o.gapW, 16);
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "rgba(255,255,255,0.3)";
+          ctx.fillRect(WALL_L, obstY - 8, o.gapW, 3);
+        } else {
+          // Преграда торчит справа
+          ctx.fillRect(WALL_R - o.gapW, obstY - 8, o.gapW, 16);
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "rgba(255,255,255,0.3)";
+          ctx.fillRect(WALL_R - o.gapW, obstY - 8, o.gapW, 3);
+        }
         ctx.shadowBlur = 0;
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.fillRect(WALL_L, obstY - 8, o.gapX - WALL_L, 3);
-        ctx.fillRect(o.gapX + o.gapW, obstY - 8, WALL_R - (o.gapX + o.gapW), 3);
       });
 
       // Trail
