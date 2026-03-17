@@ -23,10 +23,10 @@ interface Star {
 }
 
 const LEVELS = [
-  { id: 1, name: "НАЧАЛО", color: "#00ff88", wallGap: 200, speed: 3, unlocked: true },
-  { id: 2, name: "РАЗГОН", color: "#00ccff", wallGap: 180, speed: 4, unlocked: false },
-  { id: 3, name: "ШТОРМ", color: "#ff6600", wallGap: 160, speed: 5, unlocked: false },
-  { id: 4, name: "ХАОС", color: "#ff0066", wallGap: 140, speed: 6, unlocked: false },
+  { id: 1, name: "НАЧАЛО", color: "#00ff88", wallGap: 200, speed: 1.5, unlocked: true },
+  { id: 2, name: "РАЗГОН", color: "#00ccff", wallGap: 180, speed: 2.5, unlocked: false },
+  { id: 3, name: "ШТОРМ", color: "#ff6600", wallGap: 160, speed: 3.5, unlocked: false },
+  { id: 4, name: "ХАОС", color: "#ff0066", wallGap: 140, speed: 5, unlocked: false },
   { id: 5, name: "АД", color: "#ff0000", wallGap: 120, speed: 7, unlocked: false },
 ];
 
@@ -162,8 +162,8 @@ export default function Index() {
     const gs = gameStateRef.current;
 
     let obstacleTimer = 0;
-    const obstacleInterval = 80;
-    const gravity = 0.4;
+    const obstacleInterval = 120 - levelIdx * 10; // На первом уровне 120 фреймов паузы, дальше меньше
+    const gravity = 0.3 + levelIdx * 0.02; // Гравитация тоже чуть меньше на старте
     const WALL_L = 30;
     const WALL_R = W - 30;
     const PLAYER_SIZE = 12;
