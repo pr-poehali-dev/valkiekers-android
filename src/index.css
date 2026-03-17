@@ -97,5 +97,234 @@
 
   body {
     @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  #root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* ====== GAME STYLES ====== */
+
+.game-screen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* CRT Scanlines effect */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+  animation: scanline-move 8s linear infinite;
+}
+
+@keyframes scanline-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 200px;
+  }
+}
+
+/* Pixel grid background */
+.pixel-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 80, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 80, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Pixel buttons */
+.pixel-btn {
+  font-family: "Press Start 2P", monospace;
+  font-size: 11px;
+  padding: 14px 20px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 2px;
+  position: relative;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+  image-rendering: pixelated;
+  outline: none;
+}
+
+.pixel-btn:active {
+  transform: scale(0.96) translateY(2px);
+}
+
+.pixel-btn-green {
+  background: #00ff88;
+  color: #050510;
+  box-shadow:
+    4px 4px 0 #008844,
+    0 0 20px rgba(0, 255, 136, 0.4);
+}
+.pixel-btn-green:hover {
+  background: #33ffaa;
+  box-shadow:
+    4px 4px 0 #00aa55,
+    0 0 30px rgba(0, 255, 136, 0.6);
+}
+
+.pixel-btn-cyan {
+  background: #00ccff;
+  color: #050510;
+  box-shadow:
+    4px 4px 0 #0077aa,
+    0 0 20px rgba(0, 204, 255, 0.4);
+}
+.pixel-btn-cyan:hover {
+  background: #33ddff;
+  box-shadow:
+    4px 4px 0 #0099cc,
+    0 0 30px rgba(0, 204, 255, 0.6);
+}
+
+.pixel-btn-orange {
+  background: #ff6600;
+  color: #ffffff;
+  box-shadow:
+    4px 4px 0 #aa3300,
+    0 0 20px rgba(255, 102, 0, 0.4);
+}
+.pixel-btn-orange:hover {
+  background: #ff8833;
+  box-shadow:
+    4px 4px 0 #cc4400,
+    0 0 30px rgba(255, 102, 0, 0.6);
+}
+
+.pixel-btn-pink {
+  background: #ff0066;
+  color: #ffffff;
+  box-shadow:
+    4px 4px 0 #aa0044,
+    0 0 20px rgba(255, 0, 102, 0.4);
+}
+.pixel-btn-pink:hover {
+  background: #ff3388;
+  box-shadow:
+    4px 4px 0 #cc0055,
+    0 0 30px rgba(255, 0, 102, 0.6);
+}
+
+.pixel-btn-gray {
+  background: #334466;
+  color: rgba(255, 255, 255, 0.7);
+  box-shadow: 4px 4px 0 #1a2233;
+}
+.pixel-btn-gray:hover {
+  background: #445577;
+  box-shadow: 4px 4px 0 #223344;
+}
+
+/* Back button */
+.back-btn {
+  font-family: "Press Start 2P", monospace;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.back-btn:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Menu player animation */
+.menu-player {
+  width: 24px;
+  height: 24px;
+  background: #00ff88;
+  box-shadow:
+    0 0 16px #00ff88,
+    0 0 32px rgba(0, 255, 136, 0.4);
+  animation:
+    menu-bounce 0.8s ease-in-out infinite alternate,
+    menu-color 2s ease-in-out infinite;
+  image-rendering: pixelated;
+  position: relative;
+}
+
+.menu-player::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 5px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes menu-bounce {
+  0% {
+    transform: translateY(0px) translateX(-20px);
+    background: #00ff88;
+    box-shadow: 0 0 16px #00ff88;
+  }
+  100% {
+    transform: translateY(0px) translateX(20px);
+    background: #00ccff;
+    box-shadow: 0 0 16px #00ccff;
+  }
+}
+
+@keyframes menu-color {
+  0%,
+  100% {
+    background: #00ff88;
+    box-shadow: 0 0 16px #00ff88;
+  }
+  50% {
+    background: #00ccff;
+    box-shadow: 0 0 16px #00ccff;
+  }
+}
+
+/* Glow pulse animation */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow:
+      0 0 20px currentColor,
+      0 0 40px currentColor;
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow:
+      0 0 10px currentColor,
+      0 0 20px currentColor;
   }
 }
